@@ -1,36 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chemical Reaction Simulation</title>
-  <style>
-    /* CSS for buttons */
-    .button {
-      background-color: #4CAF50; /* Default button color */
-      border: none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-    }
-
-    /* Styles for active (toggled) button */
-    .button.active {
-      background-color: #008CBA; /* Color when selected */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actin Simulation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="app.js" defer></script>
 </head>
 <body>
+    <div id="gActinPlot" style="width: 600px; height: 400px;"></div>
+    <div id="fActinPlot" style="width: 600px; height: 400px;"></div>
+    <button onclick="addGActin()">Add G-Actin</button>
+    <button onclick="removeGActin()">Remove G-Actin</button>
+    <button id="positiveCapButton" class="button toggle-button">Cap + end</button>
+    <button id="negativeCapButton" class="button toggle-button">Cap - end</button>
 
-<button id="positiveCapButton" class="button">Cap +</button>
-<button id="negativeCapButton" class="button">Cap -</button>
-
-<script src="script.js"></script>
 
 </body>
+    
+  
 </html>
