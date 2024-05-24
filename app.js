@@ -89,13 +89,34 @@ function removeGActin() {
     updatePlots();
 }
 
+let positiveCapEnabled = false;
+let negativeCapEnabled = false;
+
 function setPositiveCap() {
-    equilibrium = positiveCapEquilibrium;
+    positiveCapEnabled = !positiveCapEnabled; // Toggle state
+    if (positiveCapEnabled) {
+        equilibrium = positiveCapEquilibrium;
+        document.getElementById("positiveCapButton").classList.add("active");
+    } else {
+        equilibrium = defaultEquilibrium;
+        document.getElementById("positiveCapButton").classList.remove("active");
+    }
 }
 
 function setNegativeCap() {
-    equilibrium = negativeCapEquilibrium;
+    negativeCapEnabled = !negativeCapEnabled; // Toggle state
+    if (negativeCapEnabled) {
+        equilibrium = negativeCapEquilibrium;
+        document.getElementById("negativeCapButton").classList.add("active");
+    } else {
+        equilibrium = defaultEquilibrium;
+        document.getElementById("negativeCapButton").classList.remove("active");
+    }
 }
+
+document.getElementById("positiveCapButton").addEventListener("click", setPositiveCap);
+document.getElementById("negativeCapButton").addEventListener("click", setNegativeCap);
+
 
 function updateCurrentActinValues() {
     G_actin[currentTimeIndex] = G_actin[currentTimeIndex - 1];  // Keep the last value
