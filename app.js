@@ -1,8 +1,8 @@
 let initialTotalActin = 1.0;
 let K =initialTotalActin;
 let defaultEquilibrium = 0.3;
-let positiveCapEquilibrium = 0.12;
-let negativeCapEquilibrium = 0.6;
+let positiveCapEquilibrium = 0.6;
+let negativeCapEquilibrium = 0.12;
 let equilibrium = defaultEquilibrium;
 let dt = 0.1;
 let timeSpan = Array.from({ length: 501 }, (_, i) => i * dt);
@@ -95,7 +95,7 @@ let negativeCapEnabled = false;
 function setPositiveCap() {
     positiveCapEnabled = !positiveCapEnabled; // Toggle state
     if (positiveCapEnabled) {
-        equilibrium = negativeCapEquilibrium;
+        equilibrium = positiveCapEquilibrium;
         document.getElementById("positiveCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
@@ -106,7 +106,7 @@ function setPositiveCap() {
 function setNegativeCap() {
     negativeCapEnabled = !negativeCapEnabled; // Toggle state
     if (negativeCapEnabled) {
-        equilibrium = positiveCapEquilibrium;
+        equilibrium = negativeCapEquilibrium;
         document.getElementById("negativeCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
