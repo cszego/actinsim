@@ -50,6 +50,17 @@ function updatePlots() {
         mode: 'lines',
         line: { color: 'red' }
     }], {
+        title: 'F-Actin Concentration Over Time',
+        xaxis: { title: 'Time' },
+        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin] } // Setting fixed range
+    });
+}
+    Plotly.react('fActinPlot', [{
+        x: timeSpan.slice(0, currentTimeIndex + 1),
+        y: F_actin.slice(0, currentTimeIndex + 1),
+        mode: 'lines',
+        line: { color: 'red' }
+    }], {
         title: 'F-Actin Mass Over Time',
         xaxis: { title: 'Time' },
         yaxis: { title: 'F-Actin Mass', range: [0, initialTotalActin] }
