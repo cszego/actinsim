@@ -5,7 +5,7 @@ let positiveCapEquilibrium = 0.6;
 let negativeCapEquilibrium = 0.12;
 let equilibrium = defaultEquilibrium;
 let dt = 0.1;
-let timeSpan = Array.from({ length: 501 }, (_, i) => i * dt);
+let timeSpan = Array.from({ length: 1001 }, (_, i) => i * dt);
 let G_actin = new Array(timeSpan.length).fill(0);
 let F_actin = new Array(timeSpan.length).fill(0);
 let totalActin = initialTotalActin;
@@ -52,7 +52,7 @@ function updatePlots() {
         line: { color: 'red' }
     }], {
         title: 'F-Actin Mass Over Time',
-        xaxis: { title: 'Time' , range: [0, 50] },
+        xaxis: { title: 'Time' , range: [0, 100] },
         yaxis: { title: 'F-Actin Mass', range: [0, initialTotalActin], tickvals: [] },
         showlegend:false
     });
