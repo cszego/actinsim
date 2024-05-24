@@ -1,23 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actin Simulation</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="app.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chemical Reaction Simulation</title>
+  <style>
+    /* CSS for buttons */
+    .button {
+      background-color: #4CAF50; /* Default button color */
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+
+    /* Styles for active (toggled) button */
+    .button.active {
+      background-color: #008CBA; /* Color when selected */
+    }
+  </style>
 </head>
 <body>
-    <div id="gActinPlot" style="width: 600px; height: 400px;"></div>
-    <div id="fActinPlot" style="width: 600px; height: 400px;"></div>
-    <button onclick="addGActin()">Add G-Actin</button>
-    <button onclick="removeGActin()">Remove G-Actin</button>
-    <button id="positiveCapButton" class="button toggle-button">Cap + end</button>
-    <button id="negativeCapButton" class="button toggle-button">Cap - end</button>
 
+<h1>Chemical Reaction Simulation</h1>
 
-</body>   
-    
-  
+<div id="instructions">
+  <h2>Instructions</h2>
+  <p>This simulation allows you to observe a chemical reaction over time. Use the "Cap +" and "Cap -" buttons to adjust the equilibrium of the reaction.</p>
+</div>
+
+<button id="positiveCapButton" class="button">Cap +</button>
+<button id="negativeCapButton" class="button">Cap -</button>
+
+<script>
+  let positiveCapEnabled = false;
+  let negativeCapEnabled = false;
+
+  function togglePositiveCap() {
+      positiveCapEnabled = !positiveCapEnabled; // Toggle state
+      if (positiveCapEnabled) {
+          document.getElementById("positiveCapButton").classList.add("active");
+          document.getElementById("negativeCapButton").classList.remove("active");
+      } else {
+          document.getElementById("positiveCapButton").classList.remove("active");
+      }
+  }
+
+  function toggleNegativeCap() {
+      negativeCapEnabled = !negativeCapEnabled; // Toggle state
+      if (negativeCapEnabled) {
+          document.getElementById("negativeCapButton").classList.add("active");
+          document.getElementById("positiveCapButton").classList.remove("active");
+      } else {
+          document.getElementById("negativeCapButton").classList.remove("active");
+      }
+  }
+
+  document.getElementById("positiveCapButton").addEventListener("click", togglePositiveCap);
+  document.getElementById("negativeCapButton").addEventListener("click", toggleNegativeCap);
+</script>
+
+</body>
 </html>
