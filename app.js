@@ -50,9 +50,9 @@ function updatePlots() {
         mode: 'lines',
         line: { color: 'red' }
     }], {
-        title: 'F-Actin Concentration Over Time',
+        title: 'F-Actin Mass Over Time',
         xaxis: { title: 'Time' , range: [0, 50] },
-        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin], tickvals: [] }
+        yaxis: { title: 'F-Actin Mass', range: [0, initialTotalActin], tickvals: [] }
     });
 }
 
