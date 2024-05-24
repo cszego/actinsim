@@ -52,7 +52,7 @@ function updatePlots() {
     }], {
         title: 'F-Actin Concentration Over Time',
         xaxis: { title: 'Time' , range: [0, 50] },
-        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin] }
+        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin], tickvals: [] }
     });
 }
 
