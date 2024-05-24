@@ -12,65 +12,67 @@ let totalActin = initialTotalActin;
 let currentTime = 0;
 let startDecayRate = 0.01;
 let maxDecayRate = 2.0;
+let currentTimeIndex = 0;
 
 G_actin[0] = K;
 F_actin[0] = totalActin - G_actin[0];
 
 function updatePlots() {
-    Plotly.newPlot('gActinPlot', [{
-        x: timeSpan,
-        y: G_actin,
+    Plotly.react('gActinPlot', [{
+        x: timeSpan.slice(0, currentTimeIndex + 1),
+        y: G_actin.slice(0, currentTimeIndex + 1),
         mode: 'lines',
-        line: {color: 'blue'}
+        line: { color: 'blue' }
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.3, 0.3],
         mode: 'lines',
-        line: {dash: 'dot', color: 'black'}
+        line: { dash: 'dot', color: 'black' }
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.12, 0.12],
         mode: 'lines',
-        line: {dash: 'dot', color: 'black'}
+        line: { dash: 'dot', color: 'black' }
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.6, 0.6],
         mode: 'lines',
-        line: {dash: 'dot', color: 'black'}
+        line: { dash: 'dot', color: 'black' }
     }], {
         title: 'G-Actin Concentration Over Time',
-        xaxis: {title: 'Time'},
-        yaxis: {title: 'G-Actin Concentration', range: [0, initialTotalActin]}
+        xaxis: { title: 'Time' },
+        yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] }
     });
 
-    Plotly.newPlot('fActinPlot', [{
-        x: timeSpan,
-        y: F_actin,
+    Plotly.react('fActinPlot', [{
+        x: timeSpan.slice(0, currentTimeIndex + 1),
+        y: F_actin.slice(0, currentTimeIndex + 1),
         mode: 'lines',
-        line: {color: 'red'}
+        line: { color: 'red' }
     }], {
         title: 'F-Actin Concentration Over Time',
-        xaxis: {title: 'Time'},
-        yaxis: {title: 'F-Actin Concentration', range: [0, initialTotalActin]}
+        xaxis: { title: 'Time' },
+        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin] }
     });
 }
 
-function simulate() {
-    for (let t = 1; t < timeSpan.length; t++) {
+function updateSimulation() {
+    if (currentTimeIndex < timeSpan.length - 1) {
+        currentTimeIndex++;
         currentTime += dt;
-        let growthRate = (1 - G_actin[t-1]) / (1 - equilibrium);
+        let growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
         let decayRate = startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan);
 
-        if (G_actin[t-1] > equilibrium) {
-            G_actin[t] = equilibrium + (G_actin[t-1] - equilibrium) * Math.exp(-decayRate * dt);
+        if (G_actin[currentTimeIndex - 1] > equilibrium) {
+            G_actin[currentTimeIndex] = equilibrium + (G_actin[currentTimeIndex - 1] - equilibrium) * Math.exp(-decayRate * dt);
         } else {
-            G_actin[t] = equilibrium - (equilibrium - G_actin[t-1]) * Math.exp(-growthRate * dt);
+            G_actin[currentTimeIndex] = equilibrium - (equilibrium - G_actin[currentTimeIndex - 1]) * Math.exp(-growthRate * dt);
         }
 
-        F_actin[t] = totalActin - G_actin[t];
-    }
+        F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
 
-    updatePlots();
+        updatePlots();
+    }
 }
 
 function addGActin() {
@@ -93,5 +95,18 @@ function setNegativeCap() {
     simulate();
 }
 
+function simulate() {
+    currentTimeIndex = 0;
+    G_actin.fill(0);
+    F_actin.fill(0);
+    G_actin[0] = K;
+    F_actin[0] = totalActin - G_actin[0];
+    currentTime = 0;
+}
+
 // Initial simulation
 simulate();
+updatePlots();
+
+// Update simulation every 100 milliseconds (0.1 seconds)
+setInterval(updateSimulation, 100);
