@@ -95,7 +95,7 @@ let negativeCapEnabled = false;
 function setPositiveCap() {
     positiveCapEnabled = !positiveCapEnabled; // Toggle state
     if (positiveCapEnabled) {
-        equilibrium = positiveCapEquilibrium;
+        equilibrium = negativeCapEquilibrium;
         document.getElementById("positiveCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
@@ -106,7 +106,7 @@ function setPositiveCap() {
 function setNegativeCap() {
     negativeCapEnabled = !negativeCapEnabled; // Toggle state
     if (negativeCapEnabled) {
-        equilibrium = negativeCapEquilibrium;
+        equilibrium = positiveCapEquilibrium;
         document.getElementById("negativeCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
