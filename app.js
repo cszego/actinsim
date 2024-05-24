@@ -22,37 +22,37 @@ function updatePlots() {
         x: timeSpan.slice(0, currentTimeIndex + 1),
         y: G_actin.slice(0, currentTimeIndex + 1),
         mode: 'lines',
-        line: { color: 'blue' }
+        line: {color: 'blue'}
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.3, 0.3],
         mode: 'lines',
-        line: { dash: 'dot', color: 'black' }
+        line: {dash: 'dot', color: 'black'}
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.12, 0.12],
         mode: 'lines',
-        line: { dash: 'dot', color: 'black' }
+        line: {dash: 'dot', color: 'black'}
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.6, 0.6],
         mode: 'lines',
-        line: { dash: 'dot', color: 'black' }
+        line: {dash: 'dot', color: 'black'}
     }], {
         title: 'G-Actin Concentration Over Time',
-        xaxis: { title: 'Time' },
-        yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] }
+        xaxis: {title: 'Time'},
+        yaxis: {title: 'G-Actin Concentration', range: [0, initialTotalActin]}
     });
 
     Plotly.react('fActinPlot', [{
         x: timeSpan.slice(0, currentTimeIndex + 1),
         y: F_actin.slice(0, currentTimeIndex + 1),
         mode: 'lines',
-        line: { color: 'red' }
+        line: {color: 'red'}
     }], {
         title: 'F-Actin Concentration Over Time',
-        xaxis: { title: 'Time' },
-        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin] }
+        xaxis: {title: 'Time'},
+        yaxis: {title: 'F-Actin Concentration', range: [0, initialTotalActin]}
     });
 }
 
@@ -77,25 +77,22 @@ function updateSimulation() {
 
 function addGActin() {
     totalActin += 0.2;
-    simulate();
 }
 
 function removeGActin() {
     totalActin -= 0.2;
-    simulate();
 }
 
 function setPositiveCap() {
     equilibrium = positiveCapEquilibrium;
-    simulate();
 }
 
 function setNegativeCap() {
     equilibrium = negativeCapEquilibrium;
-    simulate();
 }
 
 function simulate() {
+    // Reset only initial conditions, not the entire state
     currentTimeIndex = 0;
     G_actin.fill(0);
     F_actin.fill(0);
