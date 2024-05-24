@@ -11,6 +11,6 @@
     cursor: pointer;
 }
 
-.toggle-button.active {
-    background-color: #008CBA;
+.button.active {
+  background-color: #008CBA; /* Color when selected */
 }
