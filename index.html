@@ -30,33 +30,7 @@
 <button id="positiveCapButton" class="button">Cap +</button>
 <button id="negativeCapButton" class="button">Cap -</button>
 
-<script>
-  let positiveCapEnabled = false;
-  let negativeCapEnabled = false;
-
-  function togglePositiveCap() {
-      positiveCapEnabled = !positiveCapEnabled; // Toggle state
-      if (positiveCapEnabled) {
-          document.getElementById("positiveCapButton").classList.add("active");
-          document.getElementById("negativeCapButton").classList.remove("active");
-      } else {
-          document.getElementById("positiveCapButton").classList.remove("active");
-      }
-  }
-
-  function toggleNegativeCap() {
-      negativeCapEnabled = !negativeCapEnabled; // Toggle state
-      if (negativeCapEnabled) {
-          document.getElementById("negativeCapButton").classList.add("active");
-          document.getElementById("positiveCapButton").classList.remove("active");
-      } else {
-          document.getElementById("negativeCapButton").classList.remove("active");
-      }
-  }
-
-  document.getElementById("positiveCapButton").addEventListener("click", togglePositiveCap);
-  document.getElementById("negativeCapButton").addEventListener("click", toggleNegativeCap);
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
