@@ -1,5 +1,5 @@
 let initialTotalActin = 1.0;
-let K = 1 * initialTotalActin;
+let K = initialTotalActin;
 let defaultEquilibrium = 0.3;
 let positiveCapEquilibrium = 0.12;
 let negativeCapEquilibrium = 0.6;
@@ -18,58 +18,32 @@ G_actin[0] = K;
 F_actin[0] = totalActin - G_actin[0];
 
 function updatePlots() {
-    let maxActinConcentration = Math.max(initialTotalActin, Math.max(...G_actin), Math.max(...F_actin));
-    let maxTime = Math.max(...timeSpan);
-
     Plotly.react('gActinPlot', [{
         x: timeSpan.slice(0, currentTimeIndex + 1),
         y: G_actin.slice(0, currentTimeIndex + 1),
         mode: 'lines',
         line: { color: 'blue' }
     }, {
-        x: [0, maxTime],
+        x: [0, Math.max(...timeSpan)],
         y: [0.3, 0.3],
         mode: 'lines',
         line: { dash: 'dot', color: 'black' }
     }, {
-        x: [0, maxTime],
+        x: [0, Math.max(...timeSpan)],
         y: [0.12, 0.12],
         mode: 'lines',
         line: { dash: 'dot', color: 'black' }
     }, {
-        x: [0, maxTime],
+        x: [0, Math.max(...timeSpan)],
         y: [0.6, 0.6],
         mode: 'lines',
         line: { dash: 'dot', color: 'black' }
     }], {
         title: 'G-Actin Concentration Over Time',
-        xaxis: { title: 'Time', range: [0, maxTime] },
-        yaxis: { title: 'G-Actin Concentration', range: [0, maxActinConcentration] }
-    });
-
-    Plotly.react('fActinPlot', [{
-        x: timeSpan.slice(0, currentTimeIndex + 1),
-        y: F_actin.slice(0, currentTimeIndex + 1),
-        mode: 'lines',
-        line: { color: 'red' }
-    }], {
-        title: 'F-Actin Concentration Over Time',
-        xaxis: { title: 'Time', range: [0, maxTime] },
-        yaxis: { title: 'F-Actin Concentration', range: [0, maxActinConcentration] }
-    });
-}
-
-    Plotly.react('fActinPlot', [{
-        x: timeSpan.slice(0, currentTimeIndex + 1),
-        y: F_actin.slice(0, currentTimeIndex + 1),
-        mode: 'lines',
-        line: { color: 'red' }
-    }], {
-        title: 'F-Actin Concentration Over Time',
         xaxis: { title: 'Time' },
-        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin] } // Setting fixed range
+        yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] }
     });
-}
+
     Plotly.react('fActinPlot', [{
         x: timeSpan.slice(0, currentTimeIndex + 1),
         y: F_actin.slice(0, currentTimeIndex + 1),
@@ -77,7 +51,7 @@ function updatePlots() {
         line: { color: 'red' }
     }], {
         title: 'F-Actin Mass Over Time',
-        xaxis: { title: 'Time' },
+        xaxis: { title: 'Time' , range: [0, maxTime]},
         yaxis: { title: 'F-Actin Mass', range: [0, initialTotalActin] }
     });
 }
