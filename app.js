@@ -77,16 +77,14 @@ function updateSimulation() {
 
 function addGActin() {
     totalActin += 0.2;
-    // Update current values based on new totalActin without restarting the simulation
-    G_actin[currentTimeIndex] = equilibrium + (G_actin[currentTimeIndex] - equilibrium) * Math.exp(-startDecayRate * dt);
-    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
+    // Update the current value of G_actin and F_actin
+    updateCurrentActinValues();
 }
 
 function removeGActin() {
     totalActin -= 0.2;
-    // Update current values based on new totalActin without restarting the simulation
-    G_actin[currentTimeIndex] = equilibrium + (G_actin[currentTimeIndex] - equilibrium) * Math.exp(-startDecayRate * dt);
-    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
+    // Update the current value of G_actin and F_actin
+    updateCurrentActinValues();
 }
 
 function setPositiveCap() {
@@ -95,6 +93,13 @@ function setPositiveCap() {
 
 function setNegativeCap() {
     equilibrium = negativeCapEquilibrium;
+}
+
+function updateCurrentActinValues() {
+    G_actin[currentTimeIndex] = G_actin[currentTimeIndex - 1];  // Keep the last value
+    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
+
+    updatePlots();
 }
 
 function resetSimulation() {
