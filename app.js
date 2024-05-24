@@ -1,6 +1,6 @@
 let initialTotalActin = 1.0;
-let K = 0.7 * initialTotalActin;
-let defaultEquilibrium = 0.5;
+let K = 1 * initialTotalActin;
+let defaultEquilibrium = 0.3;
 let positiveCapEquilibrium = 0.12;
 let negativeCapEquilibrium = 0.6;
 let equilibrium = defaultEquilibrium;
@@ -50,9 +50,9 @@ function updatePlots() {
         mode: 'lines',
         line: { color: 'red' }
     }], {
-        title: 'F-Actin Concentration Over Time',
+        title: 'F-Actin Mass Over Time',
         xaxis: { title: 'Time' },
-        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin] }
+        yaxis: { title: 'F-Actin Mass', range: [0, initialTotalActin] }
     });
 }
 
