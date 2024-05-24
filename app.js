@@ -10,7 +10,7 @@ let G_actin = new Array(timeSpan.length).fill(0);
 let F_actin = new Array(timeSpan.length).fill(0);
 let totalActin = initialTotalActin;
 let currentTime = 0;
-let startDecayRate = 0.005;
+let startDecayRate = 0.02;
 let maxDecayRate = 2.0;
 let currentTimeIndex = 0;
 
