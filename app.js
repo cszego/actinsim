@@ -10,8 +10,8 @@ let G_actin = new Array(timeSpan.length).fill(0);
 let F_actin = new Array(timeSpan.length).fill(0);
 let totalActin = initialTotalActin;
 let currentTime = 0;
-let startDecayRate = 0.0001;
-let maxDecayRate = 2.0;
+let startDecayRate = 0.001;
+let maxDecayRate = 1.5;
 let currentTimeIndex = 0;
 
 G_actin[0] = K;
