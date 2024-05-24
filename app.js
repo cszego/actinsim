@@ -41,7 +41,8 @@ function updatePlots() {
     }], {
         title: 'G-Actin Concentration Over Time',
         xaxis: { title: 'Time' },
-        yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] }
+        yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] },
+        showlegend: false
     });
 
     Plotly.react('fActinPlot', [{
@@ -52,7 +53,8 @@ function updatePlots() {
     }], {
         title: 'F-Actin Mass Over Time',
         xaxis: { title: 'Time' , range: [0, 50] },
-        yaxis: { title: 'F-Actin Mass', range: [0, initialTotalActin], tickvals: [] }
+        yaxis: { title: 'F-Actin Mass', range: [0, initialTotalActin], tickvals: [] },
+        showlegend:false
     });
 }
 
