@@ -22,37 +22,37 @@ function updatePlots() {
         x: timeSpan.slice(0, currentTimeIndex + 1),
         y: G_actin.slice(0, currentTimeIndex + 1),
         mode: 'lines',
-        line: {color: 'blue'}
+        line: { color: 'blue' }
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.3, 0.3],
         mode: 'lines',
-        line: {dash: 'dot', color: 'black'}
+        line: { dash: 'dot', color: 'black' }
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.12, 0.12],
         mode: 'lines',
-        line: {dash: 'dot', color: 'black'}
+        line: { dash: 'dot', color: 'black' }
     }, {
         x: [0, Math.max(...timeSpan)],
         y: [0.6, 0.6],
         mode: 'lines',
-        line: {dash: 'dot', color: 'black'}
+        line: { dash: 'dot', color: 'black' }
     }], {
         title: 'G-Actin Concentration Over Time',
-        xaxis: {title: 'Time'},
-        yaxis: {title: 'G-Actin Concentration', range: [0, initialTotalActin]}
+        xaxis: { title: 'Time' },
+        yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] }
     });
 
     Plotly.react('fActinPlot', [{
         x: timeSpan.slice(0, currentTimeIndex + 1),
         y: F_actin.slice(0, currentTimeIndex + 1),
         mode: 'lines',
-        line: {color: 'red'}
+        line: { color: 'red' }
     }], {
         title: 'F-Actin Concentration Over Time',
-        xaxis: {title: 'Time'},
-        yaxis: {title: 'F-Actin Concentration', range: [0, initialTotalActin]}
+        xaxis: { title: 'Time' },
+        yaxis: { title: 'F-Actin Concentration', range: [0, initialTotalActin] }
     });
 }
 
@@ -102,13 +102,11 @@ function simulate() {
     G_actin[0] = K;
     F_actin[0] = totalActin - G_actin[0];
     currentTime = 0;
-
-    // Initial plot
-    updatePlots();
 }
 
 // Initial simulation
 simulate();
+updatePlots();
 
 // Update simulation every 100 milliseconds (0.1 seconds)
 setInterval(updateSimulation, 100);
