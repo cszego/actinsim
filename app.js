@@ -11,7 +11,7 @@ let F_actin = new Array(timeSpan.length).fill(0);
 let totalActin = initialTotalActin;
 let currentTime = 0;
 let startDecayRate = 0.001;
-let maxDecayRate = 1.5;
+let maxDecayRate = 1.0;
 let currentTimeIndex = 0;
 
 G_actin[0] = K;
