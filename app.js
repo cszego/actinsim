@@ -98,9 +98,11 @@ function setPositiveCap() {
     positiveCapEnabled = !positiveCapEnabled; // Toggle state
     if (positiveCapEnabled) {
         equilibrium = positiveCapEquilibrium;
+        maxDecayRate = 1;
         document.getElementById("positiveCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
+        maxDecayRate = 2;
         document.getElementById("positiveCapButton").classList.remove("active");
     }
 }
@@ -109,9 +111,11 @@ function setNegativeCap() {
     negativeCapEnabled = !negativeCapEnabled; // Toggle state
     if (negativeCapEnabled) {
         equilibrium = negativeCapEquilibrium;
+        maxDecayRate = 1;
         document.getElementById("negativeCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
+        maxDecayRate = 2;
         document.getElementById("negativeCapButton").classList.remove("active");
     }
 }
