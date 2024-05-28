@@ -99,7 +99,7 @@ function setPositiveCap() {
     if (positiveCapEnabled) {
         equilibrium = positiveCapEquilibrium;
         maxDecayRate = 0.5;
-        let growthRate = 0.5*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
+        let growthRate = 0.1*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
         document.getElementById("positiveCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
@@ -114,7 +114,7 @@ function setNegativeCap() {
     if (negativeCapEnabled) {
         equilibrium = negativeCapEquilibrium;
         maxDecayRate = 0.5;
-        let growthRate = 0.5*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
+        let growthRate = 0.1*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
         document.getElementById("negativeCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
