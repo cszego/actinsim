@@ -98,13 +98,13 @@ function setPositiveCap() {
     positiveCapEnabled = !positiveCapEnabled; // Toggle state
     if (positiveCapEnabled) {
         equilibrium = positiveCapEquilibrium;
-        maxDecayRate = 1;
-        let growthRate = 0.1*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
+        maxDecayRate = 1.5;
+        growthRate = 0.5*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
         document.getElementById("positiveCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
         maxDecayRate = 2;
-        let growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
+        growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
         document.getElementById("positiveCapButton").classList.remove("active");
     }
 }
@@ -113,13 +113,13 @@ function setNegativeCap() {
     negativeCapEnabled = !negativeCapEnabled; // Toggle state
     if (negativeCapEnabled) {
         equilibrium = negativeCapEquilibrium;
-        maxDecayRate = 1;
-        let growthRate = 0.1*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
+        maxDecayRate = 1.5;
+        growthRate = 0.5*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
         document.getElementById("negativeCapButton").classList.add("active");
     } else {
         equilibrium = defaultEquilibrium;
         maxDecayRate = 2;
-        let growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
+        growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
         document.getElementById("negativeCapButton").classList.remove("active");
     }
 }
