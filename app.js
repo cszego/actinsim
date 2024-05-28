@@ -57,40 +57,6 @@ function updatePlots() {
         showlegend:false
     });
 }
-
-function updateSimulation() {
-    if (currentTimeIndex < timeSpan.length - 1) {
-        currentTimeIndex++;
-        currentTime += dt;
-        // let growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
-        let decayRate = startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan);
-
-        if (G_actin[currentTimeIndex - 1] > equilibrium) {
-            G_actin[currentTimeIndex] = equilibrium + (G_actin[currentTimeIndex - 1] - equilibrium) * Math.exp(-decayRate * dt);
-        } else {
-            G_actin[currentTimeIndex] = equilibrium - (equilibrium - G_actin[currentTimeIndex - 1]) * Math.exp(-growthRate * dt);
-        }
-
-        F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
-
-        updatePlots();
-    }
-}
-
-function addGActin() {
-    totalActin += 0.2;
-    G_actin[currentTimeIndex] += 0.2;
-    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
-    updatePlots();
-}
-
-function removeGActin() {
-    totalActin -= 0.2;
-    G_actin[currentTimeIndex] -= 0.2;
-    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
-    updatePlots();
-}
-
 let positiveCapEnabled = false;
 let negativeCapEnabled = false;
 
@@ -126,6 +92,40 @@ function setNegativeCap() {
 
 document.getElementById("positiveCapButton").addEventListener("click", setPositiveCap);
 document.getElementById("negativeCapButton").addEventListener("click", setNegativeCap);
+function updateSimulation() {
+    if (currentTimeIndex < timeSpan.length - 1) {
+        currentTimeIndex++;
+        currentTime += dt;
+        // let growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
+        let decayRate = startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan);
+
+        if (G_actin[currentTimeIndex - 1] > equilibrium) {
+            G_actin[currentTimeIndex] = equilibrium + (G_actin[currentTimeIndex - 1] - equilibrium) * Math.exp(-decayRate * dt);
+        } else {
+            G_actin[currentTimeIndex] = equilibrium - (equilibrium - G_actin[currentTimeIndex - 1]) * Math.exp(-growthRate * dt);
+        }
+
+        F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
+
+        updatePlots();
+    }
+}
+
+function addGActin() {
+    totalActin += 0.2;
+    G_actin[currentTimeIndex] += 0.2;
+    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
+    updatePlots();
+}
+
+function removeGActin() {
+    totalActin -= 0.2;
+    G_actin[currentTimeIndex] -= 0.2;
+    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
+    updatePlots();
+}
+
+
 
 
 function updateCurrentActinValues() {
