@@ -1,147 +1,134 @@
-let initialTotalActin = 1.0;
-let K =initialTotalActin;
-let defaultEquilibrium = 0.3;
-let positiveCapEquilibrium = 0.6;
-let negativeCapEquilibrium = 0.12;
-let equilibrium = defaultEquilibrium;
-let dt = 0.1;
-let timeSpan = Array.from({ length: 1001 }, (_, i) => i * dt);
-let G_actin = new Array(timeSpan.length).fill(0);
-let F_actin = new Array(timeSpan.length).fill(0);
-let totalActin = initialTotalActin;
-let currentTime = 0;
-let startDecayRate = 0.01;
-let maxDecayRate = 2.0;
-let currentTimeIndex = 0;
-
-G_actin[0] = K;
-F_actin[0] = totalActin - G_actin[0];
-
-function updatePlots() {
-    Plotly.react('gActinPlot', [{
-        x: timeSpan.slice(0, currentTimeIndex + 1),
-        y: G_actin.slice(0, currentTimeIndex + 1),
-        mode: 'lines',
-        line: { color: 'blue' }
-    }, {
-        x: [0, Math.max(...timeSpan)],
-        y: [0.3, 0.3],
-        mode: 'lines',
-        line: { dash: 'dot', color: 'black' }
-    }, {
-        x: [0, Math.max(...timeSpan)],
-        y: [0.12, 0.12],
-        mode: 'lines',
-        line: { dash: 'dot', color: 'black' }
-    }, {
-        x: [0, Math.max(...timeSpan)],
-        y: [0.6, 0.6],
-        mode: 'lines',
-        line: { dash: 'dot', color: 'black' }
-    }], {
-        title: 'G-Actin Concentration Over Time',
-        xaxis: { title: 'Time' },
-        yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] },
-        showlegend: false
-    });
-
-    Plotly.react('fActinPlot', [{
-        x: timeSpan.slice(0, currentTimeIndex + 1),
-        y: F_actin.slice(0, currentTimeIndex + 1),
-        mode: 'lines',
-        line: { color: 'red' }
-    }], {
-        title: 'F-Actin Mass Over Time',
-        xaxis: { title: 'Time' , range: [0, 100] },
-        yaxis: { title: 'F-Actin Mass', range: [0, initialTotalActin], tickvals: [] },
-        showlegend:false
-    });
-}
 let positiveCapEnabled = false;
 let negativeCapEnabled = false;
+const defaultEquilibrium = 0.3;
+const positiveCapEquilibrium = 0.12;
+const negativeCapEquilibrium = 0.6;
+let equilibrium = defaultEquilibrium;
 
-function setPositiveCap() {
-    positiveCapEnabled = !positiveCapEnabled; // Toggle state
-    if (positiveCapEnabled) {
-        equilibrium = positiveCapEquilibrium;
-        maxDecayRate = 1.5;
-        growthRate = 0.5*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
-        document.getElementById("positiveCapButton").classList.add("active");
-    } else {
-        equilibrium = defaultEquilibrium;
-        maxDecayRate = 2;
-        growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
-        document.getElementById("positiveCapButton").classList.remove("active");
-    }
+const totalActin = 1.0;
+let G_actin = [1]; // initial G-actin concentration
+let F_actin = [totalActin - G_actin[0]]; // initial F-actin concentration
+
+let time = [0];
+const dt = 0.1; // time step
+
+// Base growth/decay rates
+const base_G_growth_rate = 0.5; 
+const base_G_decay_rate = 0.1;
+const base_F_growth_rate = 0.05; // Slower initial growth rate for F-actin
+const base_F_decay_rate = 0.5;
+
+let G_growth_rate = base_G_growth_rate;
+let G_decay_rate = base_G_decay_rate;
+let F_growth_rate = base_F_growth_rate;
+let F_decay_rate = base_F_decay_rate;
+
+// Function to update the equilibrium and rates based on the toggle buttons
+function updateEquilibriumAndRates() {
+  if (positiveCapEnabled && negativeCapEnabled) {
+    equilibrium = defaultEquilibrium;
+    G_growth_rate = base_G_growth_rate / 2;
+    G_decay_rate = base_G_decay_rate / 2;
+    F_growth_rate = base_F_growth_rate / 2;
+    F_decay_rate = base_F_decay_rate / 2;
+  } else if (positiveCapEnabled) {
+    equilibrium = positiveCapEquilibrium;
+    G_growth_rate = base_G_growth_rate / 2;
+    G_decay_rate = base_G_decay_rate / 2;
+    F_growth_rate = base_F_growth_rate / 2;
+    F_decay_rate = base_F_decay_rate / 2;
+  } else if (negativeCapEnabled) {
+    equilibrium = negativeCapEquilibrium;
+    G_growth_rate = base_G_growth_rate / 2;
+    G_decay_rate = base_G_decay_rate / 2;
+    F_growth_rate = base_F_growth_rate / 2;
+    F_decay_rate = base_F_decay_rate / 2;
+  } else {
+    equilibrium = defaultEquilibrium;
+    G_growth_rate = base_G_growth_rate;
+    G_decay_rate = base_G_decay_rate;
+    F_growth_rate = base_F_growth_rate;
+    F_decay_rate = base_F_decay_rate;
+  }
 }
 
-function setNegativeCap() {
-    negativeCapEnabled = !negativeCapEnabled; // Toggle state
-    if (negativeCapEnabled) {
-        equilibrium = negativeCapEquilibrium;
-        maxDecayRate = 1.5;
-        growthRate = 0.5*(1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
-        document.getElementById("negativeCapButton").classList.add("active");
-    } else {
-        equilibrium = defaultEquilibrium;
-        maxDecayRate = 2;
-        growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
-        document.getElementById("negativeCapButton").classList.remove("active");
-    }
+// Function to update the concentrations of G-actin and F-actin
+function updateConcentrations() {
+  const lastG = G_actin[G_actin.length - 1];
+  const lastF = F_actin[F_actin.length - 1];
+
+  let newG;
+  if (lastG > equilibrium) {
+    newG = equilibrium + (lastG - equilibrium) * Math.exp(-G_decay_rate * dt);
+  } else {
+    newG = equilibrium - (equilibrium - lastG) * Math.exp(-G_growth_rate * dt);
+  }
+  G_actin.push(newG);
+
+  let newF;
+  if (lastF > equilibrium) {
+    newF = equilibrium + (lastF - equilibrium) * Math.exp(-F_decay_rate * dt);
+  } else {
+    newF = equilibrium - (equilibrium - lastF) * Math.exp(-F_growth_rate * dt);
+  }
+  F_actin.push(newF);
+
+  time.push(time[time.length - 1] + dt);
 }
 
-document.getElementById("positiveCapButton").addEventListener("click", setPositiveCap);
-document.getElementById("negativeCapButton").addEventListener("click", setNegativeCap);
-function updateSimulation() {
-    if (currentTimeIndex < timeSpan.length - 1) {
-        currentTimeIndex++;
-        currentTime += dt;
-        // let growthRate = (1 - G_actin[currentTimeIndex - 1]) / (1 - equilibrium);
-        let decayRate = startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan);
+// Update loop
+setInterval(() => {
+  updateEquilibriumAndRates();
+  updateConcentrations();
+  Plotly.update('gActinPlot', {
+    x: [time],
+    y: [G_actin]
+  });
+  Plotly.update('fActinPlot', {
+    x: [time],
+    y: [F_actin]
+  });
+}, 100);
 
-        if (G_actin[currentTimeIndex - 1] > equilibrium) {
-            G_actin[currentTimeIndex] = equilibrium + (G_actin[currentTimeIndex - 1] - equilibrium) * Math.exp(-decayRate * dt);
-        } else {
-            G_actin[currentTimeIndex] = equilibrium - (equilibrium - G_actin[currentTimeIndex - 1]) * Math.exp(-growthRate * dt);
-        }
+// Event listeners for the checkboxes
+document.getElementById("positiveCapCheckbox").addEventListener("change", function() {
+  positiveCapEnabled = this.checked;
+  if (positiveCapEnabled) {
+    negativeCapEnabled = false;
+    document.getElementById("negativeCapCheckbox").checked = false;
+  }
+  updateEquilibriumAndRates();
+});
 
-        F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
+document.getElementById("negativeCapCheckbox").addEventListener("change", function() {
+  negativeCapEnabled = this.checked;
+  if (negativeCapEnabled) {
+    positiveCapEnabled = false;
+    document.getElementById("positiveCapCheckbox").checked = false;
+  }
+  updateEquilibriumAndRates();
+});
 
-        updatePlots();
-    }
-}
+// Initial plot
+Plotly.newPlot('gActinPlot', [{
+  x: time,
+  y: G_actin,
+  mode: 'lines',
+  name: 'G-actin'
+}], {
+  title: 'G-actin Concentration Over Time',
+  xaxis: { title: 'Time' },
+  yaxis: { title: 'G-actin Concentration', range: [0, 1] }
+});
 
-function addGActin() {
-    totalActin += 0.2;
-    G_actin[currentTimeIndex] += 0.2;
-    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
-    updatePlots();
-}
-
-function removeGActin() {
-    totalActin -= 0.2;
-    G_actin[currentTimeIndex] -= 0.2;
-    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
-    updatePlots();
-}
-
-
-
-
-function updateCurrentActinValues() {
-    G_actin[currentTimeIndex] = G_actin[currentTimeIndex - 1];  // Keep the last value
-    F_actin[currentTimeIndex] = totalActin - G_actin[currentTimeIndex];
-    updatePlots();
-}
-
-function resetSimulation() {
-    G_actin[0] = K;
-    F_actin[0] = totalActin - G_actin[0];
-}
-
-// Initial simulation
-resetSimulation();
-updatePlots();
-
-// Update simulation every 100 milliseconds (0.1 seconds)
-setInterval(updateSimulation, 100);
+Plotly.newPlot('fActinPlot', [{
+  x: time,
+  y: F_actin,
+  mode: 'lines',
+  name: 'F-actin'
+}], {
+  title: 'F-actin Concentration Over Time',
+  xaxis: { title: 'Time' },
+  yaxis: { title: 'F-actin Concentration', range: [0, 1] },
+  showlegend: false
+});
