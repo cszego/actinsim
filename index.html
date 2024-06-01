@@ -56,6 +56,7 @@
         let totalActin = initialTotalActin;
         G_actin[0] = 1;
         F_actin[0] = totalActin - G_actin[0];
+        let equilibriumReached = false;
         let gActinTrace = {
             x: [currentTime],
             y: [G_actin[0]],
@@ -101,22 +102,23 @@
                 currentTime += dt;
                 let decayRate;
 
-                if (logisticPhase) {
+                // Logistic Phase Conditions
+                if (logisticPhase && !equilibriumReached && !buttonPressed && G_actin[t - 1] > equilibrium) {
+                    // Logistic growth
                     if (document.getElementById('negativeCapButton').classList.contains('active')) {
-                        equilibrium = negativeCapEquilibrium;
-                        decayRate = maxDecayRate / 8; // Decrease slope if negative cap is active during logistic growth
+                        decayRate = maxDecayRate / 8;
                     } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
-                        equilibrium = positiveCapEquilibrium;
-                        decayRate = maxDecayRate / 4; // Decrease slope if positive cap is active during logistic growth
+                        decayRate = maxDecayRate / 4;
                     } else {
-                        equilibrium = defaultEquilibrium;
                         decayRate = 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
                     }
 
                     if (G_actin[t - 1] >= equilibrium) {
-                        logisticPhase = false; // Exit logistic growth phase when equilibrium is first reached
+                        logisticPhase = false;
+                        equilibriumReached = true; // Set equilibrium reached when it hits for the first time
                     }
                 } else {
+                    // Normal Phase
                     if (document.getElementById('negativeCapButton').classList.contains('active')) {
                         equilibrium = negativeCapEquilibrium;
                         decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
@@ -145,15 +147,13 @@
         function addGActin() {
             G_actin[t] += 0.2;
             totalActin += 0.2;
-            button += 1;
-            logisticPhase = false; // Exit logistic phase when an add/remove button is pressed
+            buttonPressed = true; // Exit logistic phase when an add/remove button is pressed
         }
 
         function removeGActin() {
             G_actin[t] -= 0.2;
             totalActin -= 0.2;
-            button += 1;
-            logisticPhase = false; // Exit logistic phase when an add/remove button is pressed
+            buttonPressed = true; // Exit logistic phase when an add/remove button is pressed
         }
 
         function togglePositiveCap() {
