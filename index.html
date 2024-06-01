@@ -104,20 +104,16 @@
                 currentTime += dt;
                 let decayRate;
 
-                // Check the state of the buttons continuously
+                // Determine the decay rate based on the state of the buttons and time
                 if (document.getElementById('negativeCapButton').classList.contains('active')) {
                     equilibrium = negativeCapEquilibrium;
-                    if currentTime < 10 {
-                        decayRate = maxDecayRate / 10; // Decreased slope when negative cap is applied
-                    } else {
-                        decayRate = 15 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
-                    }
+                    decayRate = (currentTime < 10) ? maxDecayRate / 4 : 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
                 } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
                     equilibrium = positiveCapEquilibrium;
-                    decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
+                    decayRate = maxDecayRate;
                 } else {
                     equilibrium = defaultEquilibrium;
-                    decayRate = button === 0 ? 15 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))) : maxDecayRate / 2;
+                    decayRate = button === 0 ? 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))) : maxDecayRate / 2;
                 }
 
                 if (G_actin[t - 1] > equilibrium) {
