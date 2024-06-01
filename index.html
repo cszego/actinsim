@@ -112,16 +112,6 @@
                 }
 
                 if (G_actin[t - 1] > equilibrium) {
-
-    
-          
-            
-    
-
-          
-          Expand Down
-    
-    
   
                     G_actin[t] = equilibrium + (G_actin[t - 1] - equilibrium) * Math.exp(-decayRate * dt);
                 } else {
