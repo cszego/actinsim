@@ -85,9 +85,9 @@
         };
 
         let fActinLayout = {
-            title: 'F-Actin Mass Over Time',
+            title: 'F-Actin Concentration Over Time',
             xaxis: { title: 'Time', range: [0, timeSpan[timeSpan.length - 1]] },
-            yaxis: { title: 'F-Actin Mass', range: [0, 2 * initialTotalActin], showticklabels: false }
+            yaxis: { title: 'F-Actin Concentration', range: [0, 2 * initialTotalActin], showticklabels: false }
         };
 
         Plotly.newPlot('gActinPlot', [gActinTrace], gActinLayout);
@@ -107,7 +107,7 @@
                 // Check the state of the buttons continuously
                 if (document.getElementById('negativeCapButton').classList.contains('active')) {
                     equilibrium = negativeCapEquilibrium;
-                    decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate / 4; // Decreased slope when negative cap is applied
+                    decayRate = (G_actin[t - 1] > 0.6) ? maxDecayRate / 4 : 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))); // Decreased slope when negative cap is applied
                 } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
                     equilibrium = positiveCapEquilibrium;
                     decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
