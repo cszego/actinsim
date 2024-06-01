@@ -110,14 +110,14 @@
                     if (G_actin[t - 1] > 0.6 && currentTime < 10) {
                         decayRate = maxDecayRate / 4; // Decreased slope when negative cap is applied
                     } else {
-                        decayRate = 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
+                        decayRate = 5 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
                     }
                 } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
                     equilibrium = positiveCapEquilibrium;
                     decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
                 } else {
                     equilibrium = defaultEquilibrium;
-                    decayRate = button === 0 ? 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))) : maxDecayRate / 2;
+                    decayRate = button === 0 ? 5 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))) : maxDecayRate / 2;
                 }
 
                 if (G_actin[t - 1] > equilibrium) {
