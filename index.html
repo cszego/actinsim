@@ -108,7 +108,7 @@
                 if (document.getElementById('negativeCapButton').classList.contains('active')) {
                     equilibrium = negativeCapEquilibrium;
                     if (G_actin[t - 1] > 0.6 && currentTime < 10) {
-                        decayRate = maxDecayRate / 4; // Decreased slope when negative cap is applied
+                        decayRate = maxDecayRate / 10; // Decreased slope when negative cap is applied
                     } else {
                         decayRate = 15 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
                     }
