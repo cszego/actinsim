@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G/F-Actin Simulation</title>
+    <title>BIS 104 Actin Simulation</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
@@ -28,15 +28,15 @@
     </style>
 </head>
 <body>
-    <h1>G/F-Actin Simulation</h1>
     <div class="button-container">
         <button onclick="addGActin()">Add G-Actin</button>
         <button onclick="removeGActin()">Remove G-Actin</button>
-        <input type="button" id="positiveCapButton" value="+" onclick="togglePositiveCap()" />
-        <input type="button" id="negativeCapButton" value="-" onclick="toggleNegativeCap()" />
+        <input type="button" id="positiveCapButton" value="Cap + End" onclick="togglePositiveCap()" />
+        <input type="button" id="negativeCapButton" value="Cap - End" onclick="toggleNegativeCap()" />
     </div>
     <div id="gActinPlot"></div>
     <div id="fActinPlot"></div>
+
     <script>
         let initialTotalActin = 1.0;
         let defaultEquilibrium = 0.3;
@@ -50,14 +50,12 @@
         let button = 0;
         let currentTime = 0;
         let t = 0;
-
         let logisticPhase = true;
         let G_actin = new Array(timeSpan.length).fill(0);
         let F_actin = new Array(timeSpan.length).fill(0);
         let totalActin = initialTotalActin;
         G_actin[0] = 1;
         F_actin[0] = totalActin - G_actin[0];
-
         let gActinTrace = {
             x: [currentTime],
             y: [G_actin[0]],
@@ -65,7 +63,6 @@
             name: 'G-Actin Concentration',
             line: { color: 'blue', width: 2 }
         };
-
         let fActinTrace = {
             x: [currentTime],
             y: [F_actin[0]],
@@ -73,22 +70,21 @@
             name: 'F-Actin Concentration',
             line: { color: 'red', width: 2 }
         };
-
         let gActinLayout = {
             title: 'G-Actin Concentration Over Time',
             xaxis: { title: 'Time' },
             yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] },
             shapes: [
-                { type: 'line', x0: 0, y0: 0.3, x1: timeSpan[timeSpan.length - 1], y1: 0.3, line: { dash: 'dashdot', color: 'black' } },
-                { type: 'line', x0: 0, y0: 0.12, x1: timeSpan[timeSpan.length - 1], y1: 0.12, line: { dash: 'dashdot', color: 'black' } },
-                { type: 'line', x0: 0, y0: 0.6, x1: timeSpan[timeSpan.length - 1], y1: 0.6, line: { dash: 'dashdot', color: 'black' } }
+                { type: 'line', x0: 0, y0: 0.3, x1: timeSpan[timeSpan.length - 1], y1: 0.3, line: { dash: 'dashdot', color: '#808080' } },
+                { type: 'line', x0: 0, y0: 0.12, x1: timeSpan[timeSpan.length - 1], y1: 0.12, line: { dash: 'dot', color: '#808080' } },
+                { type: 'line', x0: 0, y0: 0.6, x1: timeSpan[timeSpan.length - 1], y1: 0.6, line: { dash: 'dot', color: '#808080' } }
             ]
         };
 
         let fActinLayout = {
-            title: 'F-Actin Concentration Over Time',
+            title: 'F-Actin Mass Over Time',
             xaxis: { title: 'Time', range: [0, timeSpan[timeSpan.length - 1]] },
-            yaxis: { title: 'F-Actin Concentration', range: [0, 2 * initialTotalActin], showticklabels: false }
+            yaxis: { title: 'F-Actin Mass', range: [0, 2 * initialTotalActin], showticklabels: false }
         };
 
         Plotly.newPlot('gActinPlot', [gActinTrace], gActinLayout);
@@ -108,33 +104,39 @@
                 if (logisticPhase) {
                     if (document.getElementById('negativeCapButton').classList.contains('active')) {
                         equilibrium = negativeCapEquilibrium;
-                        decayRate = (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))); // Decrease slope if negative cap is active during logistic growth
+                        decayRate = maxDecayRate / 8; // Decrease slope if negative cap is active during logistic growth
                     } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
                         equilibrium = positiveCapEquilibrium;
-                        decayRate = (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))); // Decrease slope if positive cap is active during logistic growth
+                        decayRate = maxDecayRate / 4; // Decrease slope if positive cap is active during logistic growth
                     } else {
                         equilibrium = defaultEquilibrium;
                         decayRate = 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
                     }
 
-                    if (G_actin[t - 1] == equilibrium) {
+                    if (G_actin[t - 1] >= equilibrium) {
                         logisticPhase = false; // Exit logistic growth phase when equilibrium is first reached
                     }
                 } else {
                     if (document.getElementById('negativeCapButton').classList.contains('active')) {
-                    equilibrium = positiveCapEquilibrium;
-                    decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
-  
-                } else {
-                    equilibrium = defaultEquilibrium;
-                    decayRate = button === 0 ? 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))) : maxDecayRate / 2;
+                        equilibrium = negativeCapEquilibrium;
+                        decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
+                    } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
+                        equilibrium = positiveCapEquilibrium;
+                        decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
+                    } else {
+                        equilibrium = defaultEquilibrium;
+                        decayRate = button === 0 ? 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))) : maxDecayRate / 2;
+                    }
                 }
+
                 if (G_actin[t - 1] > equilibrium) {
                     G_actin[t] = equilibrium + (G_actin[t - 1] - equilibrium) * Math.exp(-decayRate * dt);
                 } else {
                     G_actin[t] = equilibrium - (equilibrium - G_actin[t - 1]) * Math.exp(-decayRate * dt);
                 }
+
                 F_actin[t] = totalActin - G_actin[t];
+
                 updatePlots();
                 setTimeout(simulate, 100); // Adjust the delay here (100 milliseconds)
             }
@@ -144,14 +146,14 @@
             G_actin[t] += 0.2;
             totalActin += 0.2;
             button += 1;
-            logisticPhase = false;
+            logisticPhase = false; // Exit logistic phase when an add/remove button is pressed
         }
 
         function removeGActin() {
             G_actin[t] -= 0.2;
             totalActin -= 0.2;
             button += 1;
-            logisticPhase = false;
+            logisticPhase = false; // Exit logistic phase when an add/remove button is pressed
         }
 
         function togglePositiveCap() {
