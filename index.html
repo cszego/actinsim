@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIS104 Actin Simulation</title>
+    <title>G/F-Actin Simulation</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
@@ -28,7 +28,7 @@
     </style>
 </head>
 <body>
-    <p>oops, still a little messed up<p>
+    <h1>G/F-Actin Simulation</h1>
     <div class="button-container">
         <button onclick="addGActin()">Add G-Actin</button>
         <button onclick="removeGActin()">Remove G-Actin</button>
@@ -50,11 +50,14 @@
         let button = 0;
         let currentTime = 0;
         let t = 0;
+
+        let logisticPhase = true;
         let G_actin = new Array(timeSpan.length).fill(0);
         let F_actin = new Array(timeSpan.length).fill(0);
         let totalActin = initialTotalActin;
         G_actin[0] = 1;
         F_actin[0] = totalActin - G_actin[0];
+
         let gActinTrace = {
             x: [currentTime],
             y: [G_actin[0]],
@@ -62,6 +65,7 @@
             name: 'G-Actin Concentration',
             line: { color: 'blue', width: 2 }
         };
+
         let fActinTrace = {
             x: [currentTime],
             y: [F_actin[0]],
@@ -69,6 +73,7 @@
             name: 'F-Actin Concentration',
             line: { color: 'red', width: 2 }
         };
+
         let gActinLayout = {
             title: 'G-Actin Concentration Over Time',
             xaxis: { title: 'Time' },
@@ -79,39 +84,52 @@
                 { type: 'line', x0: 0, y0: 0.6, x1: timeSpan[timeSpan.length - 1], y1: 0.6, line: { dash: 'dashdot', color: 'black' } }
             ]
         };
+
         let fActinLayout = {
             title: 'F-Actin Concentration Over Time',
             xaxis: { title: 'Time', range: [0, timeSpan[timeSpan.length - 1]] },
             yaxis: { title: 'F-Actin Concentration', range: [0, 2 * initialTotalActin], showticklabels: false }
         };
+
         Plotly.newPlot('gActinPlot', [gActinTrace], gActinLayout);
         Plotly.newPlot('fActinPlot', [fActinTrace], fActinLayout);
+
         function updatePlots() {
             Plotly.extendTraces('gActinPlot', { x: [[currentTime]], y: [[G_actin[t]]] }, [0]);
             Plotly.extendTraces('fActinPlot', { x: [[currentTime]], y: [[F_actin[t]]] }, [0]);
         }
+
         function simulate() {
             if (t < timeSpan.length - 1) {
                 t++;
                 currentTime += dt;
                 let decayRate;
-                // Check the state of the buttons continuously
-                if (document.getElementById('negativeCapButton').classList.contains('active')) {
-                    equilibrium = negativeCapEquilibrium;
-                    if (G_actin[t - 1] > 0.6 && currentTime < 10) {
-                        decayRate = maxDecayRate / 4; // Decreased slope when negative cap is applied
+
+                if (logisticPhase) {
+                    if (document.getElementById('negativeCapButton').classList.contains('active')) {
+                        equilibrium = negativeCapEquilibrium;
+                        decayRate = (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))); // Decrease slope if negative cap is active during logistic growth
+                    } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
+                        equilibrium = positiveCapEquilibrium;
+                        decayRate = (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))); // Decrease slope if positive cap is active during logistic growth
                     } else {
-                        decayRate = 15 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
+                        equilibrium = defaultEquilibrium;
+                        decayRate = 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan)));
                     }
-                } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
+
+                    if (G_actin[t - 1] == equilibrium) {
+                        logisticPhase = false; // Exit logistic growth phase when equilibrium is first reached
+                    }
+                } else {
+                    if (document.getElementById('negativeCapButton').classList.contains('active')) {
                     equilibrium = positiveCapEquilibrium;
                     decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
+  
                 } else {
                     equilibrium = defaultEquilibrium;
-                    decayRate = button === 0 ? 15 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))) : maxDecayRate / 2;
+                    decayRate = button === 0 ? 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / (Math.max(...timeSpan))) : maxDecayRate / 2;
                 }
                 if (G_actin[t - 1] > equilibrium) {
-  
                     G_actin[t] = equilibrium + (G_actin[t - 1] - equilibrium) * Math.exp(-decayRate * dt);
                 } else {
                     G_actin[t] = equilibrium - (equilibrium - G_actin[t - 1]) * Math.exp(-decayRate * dt);
@@ -121,28 +139,35 @@
                 setTimeout(simulate, 100); // Adjust the delay here (100 milliseconds)
             }
         }
+
         function addGActin() {
             G_actin[t] += 0.2;
             totalActin += 0.2;
             button += 1;
+            logisticPhase = false;
         }
+
         function removeGActin() {
             G_actin[t] -= 0.2;
             totalActin -= 0.2;
             button += 1;
+            logisticPhase = false;
         }
+
         function togglePositiveCap() {
             document.getElementById('positiveCapButton').classList.toggle('active');
             if (document.getElementById('positiveCapButton').classList.contains('active')) {
                 document.getElementById('negativeCapButton').classList.remove('active');
             }
         }
+
         function toggleNegativeCap() {
             document.getElementById('negativeCapButton').classList.toggle('active');
             if (document.getElementById('negativeCapButton').classList.contains('active')) {
                 document.getElementById('positiveCapButton').classList.remove('active');
             }
         }
+
         simulate();
     </script>
 </body>
