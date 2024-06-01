@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIS 104 Actin Simulation</title>
+    <title>G/F-Actin Simulation</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
@@ -28,11 +28,12 @@
     </style>
 </head>
 <body>
+    <h1>G/F-Actin Simulation</h1>
     <div class="button-container">
         <button onclick="addGActin()">Add G-Actin</button>
         <button onclick="removeGActin()">Remove G-Actin</button>
-        <input type="button" id="positiveCapButton" value="Cap + End" onclick="togglePositiveCap()" />
-        <input type="button" id="negativeCapButton" value="Cap - End" onclick="toggleNegativeCap()" />
+        <input type="button" id="positiveCapButton" value="+" onclick="togglePositiveCap()" />
+        <input type="button" id="negativeCapButton" value="-" onclick="toggleNegativeCap()" />
     </div>
     <div id="gActinPlot"></div>
     <div id="fActinPlot"></div>
@@ -77,9 +78,9 @@
             xaxis: { title: 'Time' },
             yaxis: { title: 'G-Actin Concentration', range: [0, initialTotalActin] },
             shapes: [
-                { type: 'line', x0: 0, y0: 0.3, x1: timeSpan[timeSpan.length - 1], y1: 0.3, line: { dash: 'dashdot', color: '#808080' } },
-                { type: 'line', x0: 0, y0: 0.12, x1: timeSpan[timeSpan.length - 1], y1: 0.12, line: { dash: 'dot', color: '#808080' } },
-                { type: 'line', x0: 0, y0: 0.6, x1: timeSpan[timeSpan.length - 1], y1: 0.6, line: { dash: 'dot', color: '#808080' } }
+                { type: 'line', x0: 0, y0: 0.3, x1: timeSpan[timeSpan.length - 1], y1: 0.3, line: { dash: 'dashdot', color: 'black' } },
+                { type: 'line', x0: 0, y0: 0.12, x1: timeSpan[timeSpan.length - 1], y1: 0.12, line: { dash: 'dashdot', color: 'black' } },
+                { type: 'line', x0: 0, y0: 0.6, x1: timeSpan[timeSpan.length - 1], y1: 0.6, line: { dash: 'dashdot', color: 'black' } }
             ]
         };
 
@@ -106,7 +107,7 @@
                 // Check the state of the buttons continuously
                 if (document.getElementById('negativeCapButton').classList.contains('active')) {
                     equilibrium = negativeCapEquilibrium;
-                    decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
+                    decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate / 4; // Decreased slope when negative cap is applied
                 } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
                     equilibrium = positiveCapEquilibrium;
                     decayRate = (G_actin[t - 1] > 0.6 || G_actin[t - 1] < 0.12) ? maxDecayRate / 4 : maxDecayRate;
@@ -128,7 +129,7 @@
             }
         }
 
-            function addGActin() {
+        function addGActin() {
             G_actin[t] += 0.2;
             totalActin += 0.2;
             button += 1;
