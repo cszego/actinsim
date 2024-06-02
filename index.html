@@ -112,15 +112,15 @@ function simulate() {
                     i++;
                 }
                 if (t_press[i] > 0.6) {
-                    decayRate = 2 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
-                } else {
                     decayRate = 10 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                } else {
+                    decayRate = 20 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 }
             } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
-                decayRate = 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                decayRate = 8 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 equilibrium = positiveCapEquilibrium;
             } else {
-                decayRate = 6 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                decayRate = 15 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 equilibrium = defaultEquilibrium;
             }
         } else {
