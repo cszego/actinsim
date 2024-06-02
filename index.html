@@ -63,7 +63,7 @@ defaultGActin[0] = 1;
 
 // Precompute the default growth (logistic growth) for F-Actin
 for (let i = 1; i < timeSpan.length; i++) {
-    let defaultDecayRate = 4 * (startDecayRate + (maxDecayRate - startDecayRate) * (i * dt) / Math.max(...timeSpan));
+    let defaultDecayRate = 6 * (startDecayRate + (maxDecayRate - startDecayRate) * (i * dt) / Math.max(...timeSpan));
     if (defaultGActin[i - 1] > defaultEquilibrium) {
         defaultGActin[i] = defaultEquilibrium + (defaultGActin[i - 1] - defaultEquilibrium) * Math.exp(-defaultDecayRate * dt);
     } else {
@@ -91,7 +91,7 @@ let defaultFActinTrace = {
     y: defaultFActin,
     mode: 'lines',
     name: 'Default F-Actin Growth',
-    line: { color: 'green', width: 2, dash: 'dash' }
+    line: { color: 'gray', width: 1, dash: 'dash' }
 };
 let gActinLayout = {
     title: 'G-Actin Concentration Over Time',
