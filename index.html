@@ -38,7 +38,7 @@
     <div id="fActinPlot"></div>
 
     <script>
-       let initialTotalActin = 1.0;
+    let initialTotalActin = 1.0;
 let defaultEquilibrium = 0.3;
 
 let positiveCapEquilibrium = 0.6;
@@ -58,6 +58,20 @@ let F_actin = new Array(timeSpan.length).fill(0);
 let totalActin = initialTotalActin;
 G_actin[0] = 1;
 F_actin[0] = totalActin - G_actin[0];
+let defaultGActin = new Array(timeSpan.length).fill(0);
+defaultGActin[0] = 1;
+
+// Precompute the default growth (logistic growth) for F-Actin
+for (let i = 1; i < timeSpan.length; i++) {
+    let defaultDecayRate = 4 * (startDecayRate + (maxDecayRate - startDecayRate) * (i * dt) / Math.max(...timeSpan));
+    if (defaultGActin[i - 1] > defaultEquilibrium) {
+        defaultGActin[i] = defaultEquilibrium + (defaultGActin[i - 1] - defaultEquilibrium) * Math.exp(-defaultDecayRate * dt);
+    } else {
+        defaultGActin[i] = defaultEquilibrium - (defaultEquilibrium - defaultGActin[i - 1]) * Math.exp(-defaultDecayRate * dt);
+    }
+}
+let defaultFActin = defaultGActin.map(g => totalActin - g);
+
 let gActinTrace = {
     x: [currentTime],
     y: [G_actin[0]],
@@ -71,6 +85,13 @@ let fActinTrace = {
     mode: 'lines',
     name: 'F-Actin Concentration',
     line: { color: 'red', width: 2 }
+};
+let defaultFActinTrace = {
+    x: timeSpan,
+    y: defaultFActin,
+    mode: 'lines',
+    name: 'Default F-Actin Growth',
+    line: { color: 'green', width: 2, dash: 'dash' }
 };
 let gActinLayout = {
     title: 'G-Actin Concentration Over Time',
@@ -90,7 +111,7 @@ let fActinLayout = {
 };
 
 Plotly.newPlot('gActinPlot', [gActinTrace], gActinLayout);
-Plotly.newPlot('fActinPlot', [fActinTrace], fActinLayout);
+Plotly.newPlot('fActinPlot', [fActinTrace, defaultFActinTrace], fActinLayout);
 
 function updatePlots() {
     Plotly.extendTraces('gActinPlot', { x: [[currentTime]], y: [[G_actin[t]]] }, [0]);
@@ -112,15 +133,15 @@ function simulate() {
                     i++;
                 }
                 if (t_press[i] > 0.6) {
-                    decayRate = 5 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                    decayRate = 2 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 } else {
-                    decayRate = 25 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                    decayRate = 10 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 }
             } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
-                decayRate = 8 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                decayRate = 4 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 equilibrium = positiveCapEquilibrium;
             } else {
-                decayRate = 20 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                decayRate = 6 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 equilibrium = defaultEquilibrium;
             }
         } else {
@@ -186,6 +207,7 @@ function toggleNegativeCap() {
 }
 
 simulate();
+
 
     </script>
 </body>
