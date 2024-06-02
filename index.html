@@ -105,7 +105,8 @@ let gActinLayout = {
 let fActinLayout = {
     title: 'F-Actin Mass Over Time',
     xaxis: { title: 'Time', range: [0, timeSpan[timeSpan.length - 1]] },
-    yaxis: { title: 'F-Actin Mass', range: [0, 2 * initialTotalActin], showticklabels: false }
+    yaxis: { title: 'F-Actin Mass', range: [0, 2 * initialTotalActin], showticklabels: false },
+    legend = false
 };
 
 Plotly.newPlot('gActinPlot', [gActinTrace], gActinLayout);
