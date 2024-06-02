@@ -114,13 +114,13 @@ function simulate() {
                 if (t_press[i] > 0.6) {
                     decayRate = 5 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 } else {
-                    decayRate = 20 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                    decayRate = 25 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 }
             } else if (document.getElementById('positiveCapButton').classList.contains('active')) {
                 decayRate = 8 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 equilibrium = positiveCapEquilibrium;
             } else {
-                decayRate = 15 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                decayRate = 20 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 equilibrium = defaultEquilibrium;
             }
         } else {
