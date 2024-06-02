@@ -112,7 +112,7 @@ function simulate() {
                     i++;
                 }
                 if (t_press[i] > 0.6) {
-                    decayRate = 10 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
+                    decayRate = 8 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 } else {
                     decayRate = 20 * (startDecayRate + (maxDecayRate - startDecayRate) * currentTime / Math.max(...timeSpan));
                 }
